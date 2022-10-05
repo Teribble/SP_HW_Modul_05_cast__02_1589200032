@@ -12,60 +12,9 @@ namespace ConsoleApp3
 {
     internal class Program
     {
-        public static List<Employee> empList = new List<Employee>();
-        public static List<Employee> GetEmp(string path)
-        {
-            List<Employee>? empList;
-
-            using (StreamReader sr = File.OpenText(path))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-
-                empList = (List<Employee>)serializer.Deserialize(sr, typeof(List<Employee>));
-            }
-
-            return empList;
-        }
         static void Main(string[] args)
         {
-            Employee em1;
-
-            Employee emp = new Employee(new Person("Вареник Жопкин", 50), 5, "Ростов на Дону", 45000);
-
-            List<Employee> listEmp = new List<Employee>()
-            {
-                new Employee(new Person("Антипов Николай", 35), 5, "Ростов-на-Дону", 20000),
-                new Employee(new Person("Варламов Вадим", 22), 5, "Ростов-на-Дону", 12200),
-                new Employee(new Person("Никифорова Алина", 23), 5, "Москва", 35600),
-                new Employee(new Person("Ким Сергей", 45), 5, "Ростов-на-Дону", 70000),
-                new Employee(new Person("Ян Армен", 50), 5, "Екатеренбург", 75000),
-                new Employee(new Person("Гаврюшина Екатерина", 33), 5, "Москва", 41000),
-                new Employee(new Person("Палкин Михаил", 40), 5, "Ростов-на-Дону", 45000),
-            };
-
-            //string json = JsonSerializer.Serialize(listEmp, new JsonSerializerOptions() { WriteIndented = true, Encoder = JavaScriptEncoder.Create(UnicodeRanges.All), PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
-            //File.WriteAllText(@"C:\resume.json", json);
-
-            var serializer = new JsonSerializer();
-
-            serializer.Formatting = Formatting.Indented;
-
-            using (StreamWriter sw = new StreamWriter(@"c:\persons.json"))
-            {
-                using (var jsonTextWriter = new JsonTextWriter(sw))
-                {
-                    serializer.Serialize(sw, listEmp);
-                }
-            }
-
-            var a = GetEmp(@"c:\persons.json");
-
-            return;
-
-                
-
-
-                return;
+            
             // Задаем 10к элементов
             var list = GetRandomList(-5000);
 
@@ -90,6 +39,40 @@ namespace ConsoleApp3
 
             // Максимальная последовательность по возврастанию
             var subsequence_maxPos = subsequencePos.Max();
+            #endregion
+
+            #region LastTask
+            // Создаем новое резюме
+            Employee emp = new Employee(new Person("Вареник Жопкин", 50), 5, "Ростов на Дону", 45000);
+
+            // Создаем лист новых резюме
+            List<Employee> listEmp = new List<Employee>()
+            {
+                new Employee(new Person("Антипов Николай", 35), 5, "Ростов-на-Дону", 20000),
+                new Employee(new Person("Варламов Вадим", 22), 5, "Ростов-на-Дону", 12200),
+                new Employee(new Person("Никифорова Алина", 23), 5, "Москва", 35600),
+                new Employee(new Person("Ким Сергей", 45), 5, "Ростов-на-Дону", 70000),
+                new Employee(new Person("Ян Армен", 50), 5, "Екатеренбург", 75000),
+                new Employee(new Person("Гаврюшина Екатерина", 33), 5, "Москва", 41000),
+                new Employee(new Person("Палкин Михаил", 40), 5, "Ростов-на-Дону", 45000),
+            };
+
+            string pathEmp = $@"c:\{nameof(emp)}.json";
+
+            string pathFolder = $@"c:\{nameof(listEmp)}";
+
+            // Заворачиваем в json резюме
+            Organization.Serialize(emp, pathEmp);
+
+            // Заворачиваем в json список пезюме
+            Organization.Serialize(listEmp, pathFolder);
+
+            // Считываем резюме
+            var empl1 = Organization.DeserializationEmloyee(pathEmp);
+
+            // Считываем папку с пезюме
+            var newList = Organization.DeserializationFolder(pathFolder);
+
             #endregion
         }
 
